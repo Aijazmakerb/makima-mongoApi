@@ -7,13 +7,14 @@ const port = 3000;
 connectToMongo();
 
 app.get("/", (req, res) => {
-  res.send("Hello, Express.js!");
+  res.send("Welcome to makima mongo api");
 });
 
-app.get("/:visited", async (req, res) => {
+app.get("/seeData/:visited", async (req, res) => {
   try {
     const users = await getAllUsers(req.params.visited);
     res.json(users);
+    console.log(req.params.visited);
   } catch (err) {
     console.error("Error fetching users:", err);
   }
