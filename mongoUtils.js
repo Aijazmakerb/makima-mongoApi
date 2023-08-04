@@ -103,3 +103,13 @@ export async function addVisitedPlayer(modelNumber, ipAddress, animeId, episodeI
     throw err;
   }
 }
+
+export async function closeConnection()
+{
+  try{
+    await client.close();
+    console.log("Connection to mongodb closed");
+  }catch(err){
+    console.log(err);
+  }
+}
