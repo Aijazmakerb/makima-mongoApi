@@ -1,8 +1,6 @@
 import { MongoClient } from "mongodb";
 import getCurrentDateAndTime from "./utils.js";
 
-const databaseName = "makima"
-
 const visitedHome = "home";
 const visitedDetails = "details";
 const visitedPlayer = "player";
@@ -14,7 +12,7 @@ let db;
 export async function connectToMongo() {
   try {
     await client.connect();
-    db = client.db(databaseName);
+    db = client.db("makima");
     console.log("Connected to MongoDB");
   } catch (err) {
     console.error("Error connecting to MongoDB:", err);
