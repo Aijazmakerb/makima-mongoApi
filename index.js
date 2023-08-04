@@ -1,22 +1,8 @@
 import express from "express";
-import { connectToMongo, getAllUsers, addVisitedHome, addVisitedDetails, closeConnection } from "./mongoUtils.js";
+import { connectToMongo, getAllUsers, addVisitedHome, addVisitedDetails } from "./mongoUtils.js";
 
 const app = express();
 const port = 3000;
-
-process.on("exit", () => {
-  closeConnection();
-});
-
-process.on("SIGINT", () => {
-  closeConnection();
-  process.exit(0);
-});
-
-process.on("SIGTERM", () => {
-  closeConnection();
-  process.exit(0);
-});
 
 connectToMongo();
 
