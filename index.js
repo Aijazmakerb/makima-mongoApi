@@ -14,10 +14,13 @@ app.get("/seeData/:visited", async (req, res) => {
   try {
     const users = await getAllUsers(req.params.visited);
     res.json(users);
-    console.log(req.params.visited);
   } catch (err) {
     console.error("Error fetching users:", err);
   }
+});
+
+app.get("/check/:value", async (req, res) => {
+  res.send(`${req.params.value}`);
 });
 
 app.get("/addHome/:model/:ip/", async(req,res) => {

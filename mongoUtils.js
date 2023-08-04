@@ -25,7 +25,7 @@ function getCollection(collectionName) {
 
 export async function getAllUsers(collectionName) {
   try {
-    const collection = db.collection(collectionName);
+    const collection = getCollection(collectionName);
 
     // Fetch all documents from the collection
     const users = await collection.find({}).toArray();
