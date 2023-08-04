@@ -4,8 +4,6 @@ import { connectToMongo, getAllUsers, addVisitedHome, addVisitedDetails, closeCo
 const app = express();
 const port = 3000;
 
-connectToMongo();
-
 process.on("exit", () => {
   closeConnection();
 });
@@ -19,6 +17,8 @@ process.on("SIGTERM", () => {
   closeConnection();
   process.exit(0);
 });
+
+connectToMongo();
 
 app.get("/", (req, res) => {
   res.send("Hello, Express.js!");
