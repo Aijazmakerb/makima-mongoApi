@@ -1,55 +1,50 @@
-import express from "express";
-import { connectToMongo, getAllUsers, addVisitedHome, addVisitedDetails } from "./mongoUtils.js";
+const express = require('express');
+const { HomeModel, DetailsModel, PlayerModel } = require('./mongodb-utils');
+const { getCurrentDateAndTime, getClientIP, getUserAgent } = require('./utils')
 
 const app = express();
 const port = 3000;
 
-connectToMongo();
-
-app.get("/", (req, res) => {
-  res.send("Welcome to makima mongo api");
-});
-
-app.get("/seeData/:visited", async (req, res) => {
+app.get('/save-data', async (req, res) => {
   try {
-    const users = await getAllUsers(req.params.visited);
-    res.json(users);
-  } catch (err) {
-    console.error("Error fetching users:", err);
+    const { table, id } = req.query;
+
+    if (table == "home") {
+      const newHomeData = new HomeModel({
+        modelNumber: getUserAgent(req),
+        dateAndTime: getCurrentDateAndTime(),
+        ipAddress: getClientIP(req),
+      });
+
+      await newHomeData.save();
+    } else if (table == "details" && id != null) {
+      const newDetailsData = new DetailsModel({
+        modelNumber: getUserAgent(req),
+        dateAndTime: getCurrentDateAndTime(),
+        ipAddress: getClientIP(req),
+        animeID: id,
+      });
+
+      await newDetailsData.save();
+    } else if (table == "player" && id != null) {
+      const newPlayerData = new PlayerModel({
+        modelNumber: getUserAgent(req),
+        dateAndTime: getCurrentDateAndTime(),
+        ipAddress: getClientIP(req),
+        videoID: id,
+      });
+
+      await newPlayerData.save();
+    } else {
+      res.status(500).json({ message: 'Field not specified' });
+    }
+    res.status(200).json({ message: 'Data saved successfully' });
+  } catch (error) {
+    console.error('Error saving data:', error);
+    res.status(500).json({ message: 'An error occurred while saving data' });
   }
 });
 
-app.get("/check/:value", async (req, res) => {
-  res.send(`${req.params.value}`);
-});
-
-app.get("/addHome/:model/:ip/", async(req,res) => {
-    try{
-        const response = await addVisitedHome(req.params.model, req.params.ip);
-        res.json({response})
-    }catch(err){
-        console.error("Error inserting user:", err);
-    }
-})
-
-app.get("/addDetails/:model/:ip/:animeId", async(req,res) => {
-    try{
-        const response = await addVisitedDetails(req.params.model, req.params.ip, req.params.animeId);
-        res.json({response})
-    }catch(err){
-        console.error("Error inserting user:", err);
-    }
-})
-
-app.get("/addPlayer/:model/:ip/:animeId/:episodeId", async(req,res) => {
-    try{
-        const response = await addVisitedDetails(req.params.model, req.params.ip, req.params.animeId, req.params.episodeId);
-        res.json({response})
-    }catch(err){
-        console.error("Error inserting user:", err);
-    }
-})
-
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+  console.log(`Server is running on port ${port}`);
 });
