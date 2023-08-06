@@ -45,6 +45,10 @@ app.get('/save-data', async (req, res) => {
   }
 });
 
+app.get('/', (req, res) => {
+  res.send('Welcome to makima mongo api');
+});
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
